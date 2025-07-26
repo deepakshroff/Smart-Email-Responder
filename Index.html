@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Email Responder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .app-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .input-options {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .option-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 1.5rem;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .option-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .option-btn.active {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .option-btn i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .input-area {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .input-area.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            resize: vertical;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .file-upload {
+            border: 2px dashed #e9ecef;
+            border-radius: 8px;
+            padding: 3rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload:hover {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .file-upload i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .file-upload p {
+            color: #666;
+        }
+        
+        .file-name {
+            margin-top: 1rem;
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .btn i {
+            font-size: 1.2rem;
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--dark);
+            border: 2px solid #e9ecef;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+        }
+        
+        .result-container {
+            margin-top: 2rem;
+            display: none;
+        }
+        
+        .result-container.active {
+            display: block;
+        }
+        
+        .result-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(67, 97, 238, 0.2);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .input-options {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Smart Email Responder</h1>
+            <p class="subtitle">Get AI-powered email summaries and responses in seconds. Upload a PDF or paste your email text below.</p>
+        </header>
+        
+        <div class="app-container">
+            <div class="input-options">
+                <div class="option-btn active" data-option="text">
+                    <i class="fas fa-align-left"></i>
+                    <h3>Enter Text</h3>
+                    <p>Paste your email content directly</p>
+                </div>
+                <div class="option-btn" data-option="file">
+                    <i class="fas fa-file-pdf"></i>
+                    <h3>Upload PDF</h3>
+                    <p>Extract text from PDF files</p>
+                </div>
+            </div>
+            
+            <div class="input-area active" id="text-input">
+                <textarea id="email-text" placeholder="Paste your email content here..."></textarea>
+                <button class="btn" id="summarize-btn">
+                    <i class="fas fa-magic"></i> Generate Summary
+                </button>
+            </div>
+            
+            <div class="input-area" id="file-input">
+                <div class="file-upload" id="upload-container">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Click to upload PDF</h3>
+                    <p>or drag and drop your file here</p>
+                    <div class="file-name" id="file-name"></div>
+                    <input type="file" id="pdf-upload" accept=".pdf" style="display: none;">
+                </div>
+                <button class="btn" id="process-pdf" disabled>
+                    <i class="fas fa-cogs"></i> Process PDF
+                </button>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <h3>Processing your request...</h3>
+                <p>This may take a few moments</p>
+            </div>
+            
+            <div class="result-container" id="result-container">
+                <h2>Summary Result</h2>
+                <div class="result-box" id="result-box"></div>
+                
+                <div class="actions">
+                    <button class="btn" id="copy-btn">
+                        <i class="fas fa-copy"></i> Copy Summary
+                    </button>
+                    <button class="btn btn-secondary" id="new-request">
+                        <i class="fas fa-redo"></i> New Request
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2025 Smart Email Responder | Powered by T5 AI Model</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Option selection
+            const optionBtns = document.querySelectorAll('.option-btn');
+            const textInputArea = document.getElementById('text-input');
+            const fileInputArea = document.getElementById('file-input');
+            
+            optionBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    optionBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const option = this.getAttribute('data-option');
+                    textInputArea.classList.remove('active');
+                    fileInputArea.classList.remove('active');
+                    
+                    if (option === 'text') {
+                        textInputArea.classList.add('active');
+                    } else {
+                        fileInputArea.classList.add('active');
+                    }
+                });
+            });
+            
+            // File upload handling
+            const uploadContainer = document.getElementById('upload-container');
+            const fileUpload = document.getElementById('pdf-upload');
+            const fileName = document.getElementById('file-name');
+            const processPdfBtn = document.getElementById('process-pdf');
+            
+            uploadContainer.addEventListener('click', function() {
+                fileUpload.click();
+            });
+            
+            fileUpload.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    fileName.textContent = this.files[0].name;
+                    processPdfBtn.disabled = false;
+                } else {
+                    fileName.textContent = '';
+                    processPdfBtn.disabled = true;
+                }
+            });
+            
+            // Drag and drop functionality
+            uploadContainer.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#4361ee';
+                this.style.backgroundColor = 'rgba(67, 97, 238, 0.05)';
+            });
+            
+            uploadContainer.addEventListener('dragleave', function() {
+                this.style.borderColor = '#e9ecef';
+                this.style.backgroundColor = 'transparent';
+            });
+            
+            uploadContainer.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#e9ecef';
+                this.style.backgroundColor = 'transparent';
+                
+                if (e.dataTransfer.files.length > 0) {
+                    fileUpload.files = e.dataTransfer.files;
+                    fileName.textContent = e.dataTransfer.files[0].name;
+                    processPdfBtn.disabled = false;
+                }
+            });
+            
+            // Mock processing function (replace with actual API calls)
+            function processRequest(content) {
+                const loading = document.getElementById('loading');
+                const resultContainer = document.getElementById('result-container');
+                const resultBox = document.getElementById('result-box');
+                
+                loading.classList.add('active');
+                resultContainer.classList.remove('active');
+                
+                // Simulate API call delay
+                setTimeout(() => {
+                    // In a real app, you would call your backend API here
+                    // For demo, we'll just show a mock summary
+                    const mockSummary = `This is a generated summary of your content:\n\n"${content.substring(0, 150)}..."\n\nThe AI has analyzed the key points and generated this concise response.`;
+                    
+                    resultBox.textContent = mockSummary;
+                    loading.classList.remove('active');
+                    resultContainer.classList.add('active');
+                }, 2000);
+            }
+            
+            // Button event listeners
+            document.getElementById('summarize-btn').addEventListener('click', function() {
+                const text = document.getElementById('email-text').value.trim();
+                if (text) {
+                    processRequest(text);
+                } else {
+                    alert('Please enter some text to summarize');
+                }
+            });
+            
+            document.getElementById('process-pdf').addEventListener('click', function() {
+                if (fileUpload.files.length > 0) {
+                    // In a real app, you would upload the PDF to your backend
+                    // For demo, we'll just show processing with the filename
+                    processRequest(`PDF file: ${fileUpload.files[0].name}`);
+                }
+            });
+            
+            document.getElementById('copy-btn').addEventListener('click', function() {
+                const resultText = document.getElementById('result-box').textContent;
+                navigator.clipboard.writeText(resultText)
+                    .then(() => alert('Summary copied to clipboard!'))
+                    .catch(err => console.error('Failed to copy:', err));
+            });
+            
+            document.getElementById('new-request').addEventListener('click', function() {
+                document.getElementById('result-container').classList.remove('active');
+                document.querySelector('.option-btn[data-option="text"]').click();
+                document.getElementById('email-text').value = '';
+                document.getElementById('file-name').textContent = '';
+                fileUpload.value = '';
+                processPdfBtn.disabled = true;
+            });
+        });
+    </script>
+</body>
+</html>
