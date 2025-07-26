@@ -51,7 +51,7 @@
 - View AI-generated summary
 - Click Copy Summary or New Request
 
----
+
 
 ### 🔮 Future Scope
 - 🔐 Add login/signup authentication
