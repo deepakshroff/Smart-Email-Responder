@@ -36,3 +36,28 @@
 - Chrome / Edge
 
 ---
+
+## ✨ Demo Walkthrough
+
+### 💬 Enter Text
+- Paste your email content manually
+- Click Generate Summary
+
+### 📄 Upload PDF
+- Upload or drag & drop a PDF file
+- Click Process PDF
+
+### 🔁 After Output
+- View AI-generated summary
+- Click Copy Summary or New Request
+
+---
+
+### 🔮 Future Scope
+- 🔐 Add login/signup authentication
+- 📬 Gmail API integration for inbox automation
+- 🌍 Support multilingual summarization
+- ☁️ Deploy to Heroku or Render
+- 📄 Export generated summaries to .docx or .txt
+
+---
